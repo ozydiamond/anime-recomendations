@@ -8,9 +8,12 @@ Namun, banyaknya jumlah anime yang tersedia seringkali menyulitkan pengguna untu
 
 Proyek ini bertujuan untuk membangun sebuah sistem rekomendasi anime yang dapat memberikan saran yang dipersonalisasi kepada pengguna berdasarkan data karakteristik anime dan interaksi pengguna sebelumnya. Dengan menerapkan teknik Content-Based Filtering dan Collaborative Filtering, sistem ini diharapkan dapat memberikan rekomendasi yang lebih akurat dan relevan, sehingga meningkatkan retensi pengguna dan nilai bisnis platform yang menerapkannya.
 
-References
+**References**
+
 [1] Dive into Average Human Attention Span Statistics & Facts. (2024, October 7). Alis Behavioral Health. Retrieved May 28, 2025, from https://www.alisbh.com/blog/average-human-attention-span-statistics-and-facts/
+
 [2] Japanese Anime Captured $19.8 Billion in 2023 Global Revenue, Cementing Japan's Role as a Global Entertainment Leader. (2024, December 19). Parrot Analytics. Retrieved May 28, 2025, from https://www.parrotanalytics.com/announcements/japanese-anime-captured-dollar198-billion-in-2023-global-revenue-cementing-japans-role-as-a-global-entertainment-leader/
+
 [3] Spicerack. (2023). The importance of personalization in digital customer experiences. Retrieved May 28, 2025, from https://spicerack.co.uk/article/the-importance-of-personalization-in-digital-customer-experiences
 
 ## Business Understanding
@@ -36,15 +39,12 @@ Proyek ini bertujuan untuk:
 **Solution statements**
 Untuk mencapai tujuan tersebut, akan digunakan dua pendekatan utama:
 
-A. Content-Based Filtering (utama)
-Sistem merekomendasikan anime berdasarkan kemiripan kontennya.Fitur-fitur yang dapat dimanfaatkan: Genres, Themes, Demographics, Synopsis (bisa diolah dengan TF-IDF + cosine similarity), Studios, Source, Rating, Type, Duration_Minutes. Contoh metode:
-- TF-IDF + Cosine Similarity untuk teks (sinopsis, genre).
-- One-hot encoding + similarity untuk fitur kategorikal.
-
-Output: "Karena kamu menyukai anime A, kamu mungkin akan menyukai anime B yang mirip dari sisi genre dan cerita."
-
-B. Popularity-Based Recommendation
+A. Popularity-Based Recommendation
 Sistem menyarankan anime berdasarkan popularitas secara umum.Fitur yang digunakan:Score, Scored_Users, Ranked, Popularity, Members, Favorites. Pendekatan ini berguna sebagai baseline atau fallback, terutama saat pengguna belum memilih anime sebelumnya.Output: "Anime-anime terpopuler yang sedang digemari oleh komunitas."
+
+B. Content-Based Filtering
+Sistem rekomendasi ini berfokus pada Content-Based Filtering untuk menyarankan anime berdasarkan kemiripan fitur-fitur kontennya. Metode utamanya adalah menggunakan Cosine Similarity untuk mengukur kesamaan antar-anime.
+
 
 ## Data Understanding
 Dataset ini diambil dari kaggle [Anime Database 2022](https://www.kaggle.com/datasets/harits/anime-database-2022) berisi 21.460 entri anime unik dengan 28 kolom berbeda, memberikan informasi yang kaya tentang setiap judul anime.Dataset Memiliki Total Baris: 21.460, Total Kolom: 28 dan Baris Duplikat: 0 (menunjukkan integritas data yang baik)
