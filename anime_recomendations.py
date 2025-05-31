@@ -60,8 +60,7 @@ drive.mount('/content/drive')
 """# Load dataset"""
 
 # load data
-file_path = 'data/anime.csv'
-df = pd.read_csv(file_path)
+df = pd.read_csv('data/anime.csv')
 df.head()
 
 """# Data Understanding"""
@@ -398,8 +397,32 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
+# Daftar judul yang direkomendasikan
+judul_rekomendasi = [
+    "Bleach",
+    "Fairy Tail",
+    "Naruto: Shippuuden",
+    "Hunter x Hunter (2011)",
+    "Fairy Tail (2014)",
+    "Hunter x Hunter",
+    "Yu☆Gi☆Oh! Duel Monsters",
+    "Nanatsu no Taizai",
+    "Magi: The Labyrinth of Magic",
+    "Fairy Tail: Final Series",
+    "Naruto"
+]
+
+# Filter DataFrame berdasarkan judul rekomendasi
+df_eval = df[df['Title'].isin(judul_rekomendasi)][['Title', 'Genres', 'Type', 'Source', 'Rating']]
+
+# Reset index agar rapi
+df_eval = df_eval.reset_index(drop=True)
+
+# Tampilkan DataFrame hasil filter
+display(df_eval)
+
 """**Interpretasi**
-Skor cosine similarity berkisar antara 0 (tidak mirip) hingga 1 (sangat mirip).Hasil evaluasi menunjukkan bahwa sebagian besar pasangan anime memiliki similarity yang sedang hingga tinggi.Hal ini mengindikasikan bahwa model dapat memberikan rekomendasi berbasis konten yang cukup relevan secara umum.
+Skor cosine similarity berkisar antara 0 (tidak mirip) hingga 1 (sangat mirip).Hasil evaluasi menunjukkan bahwa sebagian besar pasangan anime memiliki similarity yang sedang hingga tinggi.Hal ini mengindikasikan bahwa model dapat memberikan rekomendasi berbasis konten yang cukup relevan secara umum. Dari `display(df_eval)` juga menunjukkan semua judul memiliki genre yang identik dengan Naruto (Action, Adventure, Fantasy), Semua judul berasal dari TV series dengan sumber Manga dan memiliki rating yang sama yaitu PG-13.
 
 **Keterbatasan Evaluasi**
 Karena tidak terdapat ground truth atau umpan balik pengguna dalam dataset ini, evaluasi kuantitatif terhadap akurasi hasil rekomendasi belum dapat dilakukan. Namun demikian, analisis distribusi similarity memberikan indikasi awal tentang performa model.

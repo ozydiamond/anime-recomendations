@@ -249,6 +249,20 @@ Dalam tahap ini, dibangun dua pendekatan sistem rekomendasi yaitu **Popularity-B
 
 Pendekatan ini merekomendasikan anime berdasarkan tingkat popularitasnya. Ukuran popularitas yang digunakan adalah jumlah anggota (`Members_log`) yang menandakan seberapa banyak pengguna yang menambahkan anime tersebut ke daftar mereka. Anime dengan nilai `Members_log` tertinggi akan dianggap sebagai yang paling populer dan direkomendasikan secara umum kepada semua pengguna.
 
+Output menampilkan 10 anime paling populer berdasarkan jumlah member:
+| Original_Title                   | Members_log |
+| :------------------------------- | :---------- |
+| Shingeki no Kyojin               | 1.000000    |
+| Death Note                       | 0.999439    |
+| Fullmetal Alchemist: Brotherhood | 0.983045    |
+| One Punch Man                    | 0.979654    |
+| Sword Art Online                 | 0.977305    |
+| Boku no Hero Academia            | 0.973476    |
+| Naruto                           | 0.967682    |
+| Tokyo Ghoul                      | 0.967646    |
+| Kimetsu no Yaiba                 | 0.967410    |
+| Hunter x Hunter (2011)           | 0.963940    |
+
 ### Content-Based Filtering
 
 Sistem ini merekomendasikan anime yang memiliki kemiripan fitur dengan anime tertentu. Langkah-langkahnya sebagai berikut:
@@ -265,34 +279,71 @@ Sistem ini merekomendasikan anime yang memiliki kemiripan fitur dengan anime ter
 4. **Fungsi Rekomendasi**
    Dibuat fungsi yang menerima input berupa judul anime dan mengembalikan daftar anime lain yang paling mirip berdasarkan skor kemiripan.
 
+5. **Menerapkan Fungsi untuk Merekomendasikan Anime terkait**
+    Menggunakan fungsi yang sudah dibuat sebelumnya, mencoba menginput original title anime dan mendapat rekomendasi anime yang mirip. pada contoh ini mencoba menginput original title *Naruto* muncul Output berikut:
+    |  | Original_Title            |
+    | :----- | :------------------------ |
+    | 0      | Bleach                    |
+    | 1      | Fairy Tail                |
+    | 2      | Naruto: Shippuuden        |
+    | 3      | Hunter x Hunter (2011)    |
+    | 4      | Fairy Tail (2014)         |
+    | 5      | Hunter x Hunter           |
+    | 6      | Yu☆Gi☆Oh! Duel Monsters   |
+    | 7      | Nanatsu no Taizai         |
+    | 8      | Magi: The Labyrinth of Magic |
+    | 9      | Fairy Tail: Final Series  |
+
 Pendekatan **popularity-based** cocok digunakan untuk pengguna baru atau saat tidak ada input preferensi, sementara **content-based** dapat memberikan rekomendasi yang lebih personal berdasarkan anime yang telah disukai pengguna.
 
 ## Evaluation
 
-Sistem rekomendasi yang dibangun pada proyek ini tidak berbasis interaksi pengguna (seperti rating, klik, atau histori penayangan), sehingga metrik evaluasi kuantitatif seperti RMSE, MAE, Precision\@K, atau Recall\@K tidak dapat diterapkan secara langsung.
+Sistem rekomendasi yang dibangun pada proyek ini tidak berbasis interaksi pengguna (seperti rating, klik, atau histori penayangan), sehingga metrik evaluasi kuantitatif seperti RMSE, MAE tidak dapat diterapkan secara langsung.
 
-Sebagai gantinya, evaluasi dilakukan dengan pendekatan **analisis distribusi skor kemiripan (cosine similarity)** antar item pada sistem content-based filtering.
+Sebagai gantinya, evaluasi dilakukan dengan pendekatan **analisis distribusi skor kemiripan (cosine similarity)** antar item pada sistem content-based filtering dan pendekatan pengecekan precision@K
 
-### Metrik yang Digunakan
-
-* **Cosine Similarity**
+### Cosine Similarity
   Cosine similarity mengukur kemiripan antara dua vektor dalam ruang fitur berdasarkan sudut di antara keduanya. Formula umumnya adalah:
 
 ```
-Cosine Similarity = (A · B) / (||A|| * ||B||)
+    Cosine Similarity = (A · B) / (||A|| * ||B||)
 ```
+    
+Nilainya berkisar antara: `1`: sangat mirip, `0`: tidak mirip,  `-1`: sangat berlawanan (tidak berlaku pada data non-negatif seperti ini).
 
-  Nilainya berkisar antara:
+![Distribusi cosine simialirity antar anime](https://i.imgur.com/JsC8QNG.png)
 
-  * `1`: sangat mirip,
-  * `0`: tidak mirip,
-  * `-1`: sangat berlawanan (tidak berlaku pada data non-negatif seperti ini).
+### Pendekatan Precision@k
+Karena tidak tersedia data interaksi pengguna seperti rating atau histori tontonan, maka pendekatan evaluasi yang digunakan adalah manual qualitative evaluation dengan Precision@K, yaitu mengukur seberapa banyak anime yang direkomendasikan benar-benar relevan dengan anime input berdasarkan genre, type, source, dan rating.
+Precision@K didefinisikan sebagai berikut:
+
+```
+    Precision@K = Jumlah rekomendasi yang relevan / K
+```
+Mengidentifikasi jumlah rekomendasi yang relevan dengan menampilkan title, genre, type, source, dan rating tiap title yang direkomendasikan sebelumnya
+| Title                        | Genres                        | Type | Source | Rating                    |
+| ---------------------------- | ----------------------------- | ---- | ------ | ------------------------- |
+| Naruto                     | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older    |
+| Bleach                       | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Fairy Tail                   | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Naruto: Shippuuden           | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Hunter x Hunter (2011)       | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Fairy Tail (2014)            | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Hunter x Hunter              | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Yu☆Gi☆Oh! Duel Monsters      | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Nanatsu no Taizai            | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Magi: The Labyrinth of Magic | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
+| Fairy Tail: Final Series     | \[Action, Adventure, Fantasy] | TV   | Manga  | PG-13 - Teens 13 or older |
 
 ###  Hasil Evaluasi
 
-* Distribusi skor cosine similarity cenderung berada di rentang menengah hingga tinggi.
-* Ini menunjukkan bahwa fitur-fitur yang digunakan (genre, tipe, status, sumber cerita, rating, dan statistik lainnya) cukup informatif dalam membedakan dan mengelompokkan anime.
-* Fungsi rekomendasi mampu mengembalikan daftar anime yang relevan secara konten dengan anime input pengguna.
+* Distribusi skor cosine similarity cenderung berada di rentang menengah hingga tinggi. Ini menunjukkan bahwa fitur-fitur yang digunakan (genre, tipe, status, sumber cerita, rating, dan statistik lainnya) cukup informatif dalam membedakan dan mengelompokkan anime.
+* Dilihat hasil dari pendekatan Precison@K didapatkan:
+    - Semua judul memiliki genre yang identik dengan Naruto: Action, Adventure, Fantasy
+    - Semua berasal dari TV series dengan sumber: Manga
+    - Semua memiliki rating yang sama: PG-13
+
+    Precision@K = 10/10 = 1.00 (100%)
 
 ###  Keterbatasan
 
@@ -303,7 +354,6 @@ Cosine Similarity = (A · B) / (||A|| * ||B||)
 
 Jika ke depannya tersedia data interaksi pengguna, maka metrik seperti berikut dapat digunakan:
 
-* **Precision\@K**: Persentase item relevan dalam K hasil rekomendasi.
 * **Recall\@K**: Persentase item relevan yang berhasil ditemukan dari seluruh item relevan.
 * **Mean Average Precision (MAP)**: Mengukur rata-rata presisi dari posisi item-item relevan dalam ranking.
 
